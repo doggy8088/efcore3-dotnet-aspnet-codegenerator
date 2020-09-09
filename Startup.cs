@@ -30,6 +30,12 @@ namespace api1
             services.AddDbContext<ContosoUniversityContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            // Add OpenAPI v3 document
+            services.AddOpenApiDocument();
+
+            // Add Swagger v2 document
+            // services.AddSwaggerDocument();
+
             services.AddControllers();
         }
 
@@ -42,6 +48,17 @@ namespace api1
             }
 
             app.UseHttpsRedirection();
+
+            app.UseOpenApi();       // serve OpenAPI/Swagger documents
+
+            app.UseSwaggerUi3();    // serve Swagger UI
+
+            app.UseReDoc(config =>  // serve ReDoc UI
+            {
+                // 這裡的 Path 用來設定 ReDoc UI 的路由 (網址路徑) (一定要以 / 斜線開頭)
+                config.Path = "/redoc";
+            });
+
 
             app.UseRouting();
 
